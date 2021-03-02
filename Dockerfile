@@ -8,7 +8,6 @@ WORKDIR /app
 
 COPY . .
 
-
 RUN $HOME/.poetry/bin/poetry install
 
 CMD $HOME/.poetry/bin/poetry run uvicorn main:app
