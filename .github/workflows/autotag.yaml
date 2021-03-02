@@ -17,7 +17,7 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           output-file: "false"
-          tag-prefix: ""
+          tag-prefix: "v"
           skip-version-file: "true"
           skip-on-empty: "false"  
       - name: Automated GitHub Release
