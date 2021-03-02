@@ -17,6 +17,7 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           output-file: "false"
+          tag-prefix: ""
           skip-version-file: "true"
           skip-commit: "true"
           skip-on-empty: "false"
