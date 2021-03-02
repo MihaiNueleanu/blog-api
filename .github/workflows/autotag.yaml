@@ -19,8 +19,7 @@ jobs:
           output-file: "false"
           tag-prefix: ""
           skip-version-file: "true"
-          skip-commit: "true"
-          skip-on-empty: "false"
+          skip-on-empty: "false"  
       - name: Automated GitHub Release
         uses: actions/create-release@v1
         if: ${{ steps.versionBump.outputs.skipped == 'false' }}
