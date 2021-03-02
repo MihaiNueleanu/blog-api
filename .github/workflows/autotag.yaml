@@ -11,15 +11,17 @@ jobs:
     steps:
       - name: Checkout Git repo
         uses: actions/checkout@master
+
       - name: Automated Version Bump
         id: versionBump
         uses: TriPSs/conventional-changelog-action@v3
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           output-file: "false"
-          tag-prefix: "v"
+          tag-prefix: ""
           skip-version-file: "true"
-          skip-on-empty: "false"  
+          skip-on-empty: "false"
+
       - name: Automated GitHub Release
         uses: actions/create-release@v1
         if: ${{ steps.versionBump.outputs.skipped == 'false' }}
@@ -29,6 +31,7 @@ jobs:
           tag_name: ${{ steps.versionBump.outputs.tag }}
           release_name: ${{ steps.versionBump.outputs.tag }}
           body: ${{ steps.versionBump.outputs.clean_changelog }}
+          
       - name: Install SSH Key
         uses: shimataro/ssh-key-action@v2
         with:
