@@ -1,7 +1,6 @@
-FROM python:3-alpine
+FROM python:3.8
 
-RUN apk --no-cache add curl
-
+RUN apt-get install curl
 RUN curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python
 
 WORKDIR /app
