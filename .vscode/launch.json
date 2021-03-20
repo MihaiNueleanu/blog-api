@@ -10,9 +10,17 @@
       "request": "launch",
       "module": "uvicorn",
       "args": [
-        "main:app", "--reload"
+        "main:app",
+        "--reload"
       ],
       "jinja": true
+    },
+    {
+      "name": "Python: Medium",
+      "type": "python",
+      "request": "launch",
+      "program": "${workspaceFolder}/medium.py",
+      "console": "integratedTerminal"
     }
   ]
 }

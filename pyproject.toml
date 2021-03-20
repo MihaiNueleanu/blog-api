@@ -11,6 +11,10 @@ uvicorn = "^0.13.4"
 motor = "^2.3.1"
 dnspython = "^2.1.0"
 python-dotenv = "^0.15.0"
+requests = "^2.25.1"
+types-requests = "^0.1.1"
+mypy = "^0.812"
+atoma = "^0.0.17"
 
 [tool.poetry.dev-dependencies]
 autopep8 = "^1.5.5"
@@ -18,3 +22,4 @@ autopep8 = "^1.5.5"
 [build-system]
 requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
+

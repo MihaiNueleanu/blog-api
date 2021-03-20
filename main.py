@@ -1,12 +1,17 @@
-from services.clap import count_claps, give_clap
-from models.clap import Clap
-from starlette.requests import Request
-from services.discussion import find_comment_by_path,  post_comment
-from models.comment import Comment
-from typing import Optional
-from fastapi import FastAPI, HTTPException
-from fastapi.middleware.cors import CORSMiddleware
+
 from datetime import datetime
+from typing import Optional
+
+from fastapi import FastAPI, Header, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
+from starlette.requests import Request
+
+from models.clap import Clap
+from models.comment import Comment
+from services.clap import count_claps, give_clap
+from services.discussion import find_comment_by_path, post_comment
+from services.medium import sync_blog_to_medium
+from settings import settings
 
 app = FastAPI()
 
@@ -54,3 +59,12 @@ async def clap(clap: Clap, request: Request):
         return clap
     except Exception:
         raise HTTPException(status_code=400, detail="Already voted")
+
+
+@app.post("/api/sync_medium")
+async def sync_medium(x_secret_token: Optional[str] = Header(None)):
+    if not x_secret_token or x_secret_token != settings.secret_token:
+        raise HTTPException(status_code=403, detail="Not allowed")
+
+    sync_blog_to_medium()
+    return {"message": "Success"}
