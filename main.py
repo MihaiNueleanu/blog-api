@@ -60,7 +60,7 @@ async def clap(clap: Clap, request: Request):
         raise HTTPException(status_code=400, detail="Already voted")
 
 
-@app.post("/api/sync_medium")
+@app.get("/api/sync_medium")
 async def sync_medium(x_secret_token: Optional[str] = Header(None)):
     if not x_secret_token or x_secret_token != settings.secret_token:
         raise HTTPException(status_code=403, detail="Not allowed")
