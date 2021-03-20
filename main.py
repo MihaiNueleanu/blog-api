@@ -15,7 +15,6 @@ from settings import settings
 
 app = FastAPI()
 
-
 app.add_middleware(
     CORSMiddleware,
     allow_credentials=True,
