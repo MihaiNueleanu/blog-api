@@ -77,7 +77,7 @@ def create_medium_article(user_id: str, post_url: str, title: str, content: str)
 
 async def sync_blog_to_medium():
     print("Running sync_blog_to_medium...")
-    await sleep(15)
+    await sleep(30)
 
     user_id = get_medium_user_id()
     medium_post_titles = get_medium_titles()
