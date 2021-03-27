@@ -1,9 +1,11 @@
+import json
+from asyncio.tasks import sleep
 from difflib import SequenceMatcher
 from urllib.parse import urljoin
 
-import atoma
 import requests
 from settings import settings
+from .medium_query import medium_query
 
 
 def get_post_url_list():
@@ -26,11 +28,31 @@ def get_medium_user_id():
 
 
 def get_medium_titles():
-    url = 'https://medium.com/feed/@dotmethod'
-    response = requests.get(url)
-    feed = atoma.parse_rss_bytes(response.content)
+    url = 'https://dotmethod.medium.com/_/graphql'
+    variables = {
+        "id": "9585a11eb753",
+        "homepagePostsLimit": 25,
+        "includeDistributedResponses": True
+    }
 
-    titles = [post.title for post in feed.items if post.title]
+    data = {
+        'query': medium_query,
+        'variables': variables
+    }
+
+    headers = {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+    }
+
+    result = requests.post(
+        url=url,
+        data=json.dumps(data).encode('utf-8'),
+        headers=headers
+    )
+
+    posts = result.json()['data']['userResult']['homepagePostsConnection']['posts']
+    titles = [post['title'] for post in posts]
     return titles
 
 
@@ -53,8 +75,10 @@ def create_medium_article(user_id: str, post_url: str, title: str, content: str)
     return json['data']
 
 
-def sync_blog_to_medium():
+async def sync_blog_to_medium():
     print("Running sync_blog_to_medium...")
+    await sleep(15)
+
     user_id = get_medium_user_id()
     medium_post_titles = get_medium_titles()
     posts = get_post_url_list()

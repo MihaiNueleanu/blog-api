@@ -1,4 +1,5 @@
 
+import asyncio
 from datetime import datetime
 from typing import Optional
 
@@ -65,5 +66,7 @@ async def sync_medium(x_secret_token: Optional[str] = Header(None)):
     if not x_secret_token or x_secret_token != settings.secret_token:
         raise HTTPException(status_code=403, detail="Not allowed")
 
-    sync_blog_to_medium()
+    loop = asyncio.get_event_loop()
+    loop.create_task(sync_blog_to_medium())
+
     return {"message": "Success"}
