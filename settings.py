@@ -6,6 +6,12 @@ class Settings(BaseSettings):
     medium_token: str = ''
     secret_token: str = 'AGMF80AWNUYH8G9A3N9FAIMGNSFAMFKSIG'
 
+    SMTP_PORT: int
+    SMTP_SERVER: str
+    SMTP_USER: str
+    SMTP_PASSWORD: str
+    MY_EMAIL: str
+
     class Config:
         env_file = '.env'
         env_file_encoding = 'utf-8'

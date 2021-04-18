@@ -11,6 +11,7 @@ from models.clap import Clap
 from models.comment import Comment
 from services.clap import count_claps, give_clap
 from services.discussion import find_comment_by_path, post_comment
+from services.email import send_email
 from services.medium import sync_blog_to_medium
 from settings import settings
 
@@ -39,6 +40,11 @@ async def create_comment(comment: Comment, request: Request):
     comment.ip = request.client.host
     comment.timestamp = datetime.now()
     await post_comment(comment)
+
+    send_email(receiver=settings.MY_EMAIL,
+               subject="dotmethod | new message on the blog",
+               text=f"From: {comment.name}\nMessage: {comment.body}")
+
     return comment
 
 
