@@ -1,4 +1,3 @@
-from services.utils import fire_and_forget
 import smtplib
 
 from settings import settings
@@ -11,7 +10,6 @@ def get_client():
     return client
 
 
-@fire_and_forget
 def send_email(receiver: str, text: str, subject="dotmethod"):
     client = get_client()
     sender = settings.SMTP_USER
