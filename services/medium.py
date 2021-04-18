@@ -9,7 +9,7 @@ from .medium_query import medium_query
 
 
 def get_post_url_list():
-    url = 'https://nueleanu.com/sitemap.json'
+    url = 'https://dotmethod.me/sitemap.json'
     response = requests.get(url)
 
     return response.json()
@@ -51,7 +51,8 @@ def get_medium_titles():
         headers=headers
     )
 
-    posts = result.json()['data']['userResult']['homepagePostsConnection']['posts']
+    posts = result.json()[
+        'data']['userResult']['homepagePostsConnection']['posts']
     titles = [post['title'] for post in posts]
     return titles
 
@@ -84,7 +85,7 @@ async def sync_blog_to_medium():
     posts = get_post_url_list()
 
     for post in posts:
-        post_url = urljoin("https://nueleanu.com/posts/", post['slug'])
+        post_url = urljoin("https://dotmethod.me/posts/", post['slug'])
         title = post['title']
 
         exists = False
@@ -95,7 +96,9 @@ async def sync_blog_to_medium():
 
         if not exists:
             try:
-                create_medium_article(user_id, post_url, title, post['content'])
-                print(f'Created new medium article. Title: {title} / Original URL: {post_url}')
+                create_medium_article(
+                    user_id, post_url, title, post['content'])
+                print(
+                    f'Created new medium article. Title: {title} / Original URL: {post_url}')
             except Exception as e:
                 print(f'Failed creating medium article, {e}')
