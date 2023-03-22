@@ -1,7 +1,7 @@
 FROM python:3.8
 
 RUN apt-get install curl
-RUN curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python
+RUN curl -sSL https://install.python-poetry.org | python3 -
 
 WORKDIR /app
 
