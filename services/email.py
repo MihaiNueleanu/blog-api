@@ -1,20 +1,22 @@
-import smtplib
+
+from sendgrid import SendGridAPIClient
+from sendgrid.helpers.mail import Mail
 
 from settings import settings
 
 
-def get_client():
-    client = smtplib.SMTP_SSL(host=settings.SMTP_SERVER,
-                              port=settings.SMTP_PORT)
-    client.login(settings.SMTP_USER, settings.SMTP_PASSWORD)
-    return client
-
-
 def send_email(receiver: str, text: str, subject="dotmethod"):
-    client = get_client()
-    sender = settings.SMTP_USER
+    message = Mail(
+        from_email=settings.MY_EMAIL,
+        to_emails=receiver,
+        subject=subject,
+        plain_text_content=text,
+    )
 
-    payload = "Subject: {}\n\n{}".format(subject, text)
-
-    client.sendmail(sender, receiver, payload)
-    print(f"Sent mail. Subject: {subject}")
+    try:
+        sg = SendGridAPIClient(settings.SENDGRID_API_KEY)
+        sg.send(message)
+        print(f"""Email sent to {receiver} with subject {subject}""")
+    except Exception as e:
+        print(
+            f"""Email error while sending message to {receiver} with subject {subject}""", e)

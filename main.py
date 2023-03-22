@@ -9,6 +9,7 @@ from starlette.requests import Request
 
 from models.clap import Clap
 from models.comment import Comment
+from models.email import EmailMessage
 from services.clap import count_claps, give_clap
 from services.discussion import find_comment_by_path, post_comment
 from services.email import send_email
@@ -75,4 +76,14 @@ async def sync_medium(x_secret_token: Optional[str] = Header(None)):
     loop = asyncio.get_event_loop()
     loop.create_task(sync_blog_to_medium())
 
+    return {"message": "Success"}
+
+
+@app.post("/api/message")
+async def send_message(message: EmailMessage, request: Request):
+    send_email(
+        receiver=settings.MY_EMAIL,
+        subject="Contact request from dotmethod.me: "+message.subject,
+        text=f"""From: {message.from_email}\nSubject: {message.subject}\nMessage: {message.body}"""
+    )
     return {"message": "Success"}
