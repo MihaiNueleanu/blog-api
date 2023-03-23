@@ -7,6 +7,6 @@ WORKDIR /app
 
 COPY . .
 
-RUN $HOME/.poetry/bin/poetry install
+RUN $HOME/.local/bin/poetry install
 
-CMD $HOME/.poetry/bin/poetry run uvicorn main:app --host 0.0.0.0
+CMD $HOME/.local/bin/poetry run uvicorn main:app --host 0.0.0.0
