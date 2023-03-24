@@ -10,9 +10,11 @@ from starlette.requests import Request
 from models.clap import Clap
 from models.comment import Comment
 from models.email import EmailMessage
+from models.event import WebEvent
 from services.clap import count_claps, give_clap
 from services.discussion import find_comment_by_path, post_comment
 from services.email import send_email
+from services.event import create_event
 from services.medium import sync_blog_to_medium
 from settings import settings
 
@@ -86,4 +88,18 @@ async def send_message(message: EmailMessage, request: Request):
         subject="Contact request from dotmethod.me: "+message.subject,
         text=f"""From: {message.from_email}\nSubject: {message.subject}\nMessage: {message.body}"""
     )
+    return {"message": "Success"}
+
+
+@app.post("/api/event")
+async def track(event: WebEvent, request: Request):
+    real_ip = request.headers.get("X-Real-IP")
+    event.ip = real_ip if real_ip else request.client.host
+    event.timestamp = datetime.now()
+    event.user_agent = request.headers.get("User-Agent")
+    event.referrer = request.headers.get("Referer")
+    event.language = request.headers.get("Accept-Language")
+    event.country = request.headers.get("CF-IPCountry")
+
+    await create_event(event)
     return {"message": "Success"}
