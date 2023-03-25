@@ -10,6 +10,5 @@ class WebEvent(BaseModel):
     ip: Optional[str] = None
     user_agent: Optional[str] = None
     referrer: Optional[str] = None
-    fingerprint: Optional[str] = None
     language: Optional[str] = None
     country: Optional[str] = None

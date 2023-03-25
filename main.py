@@ -97,7 +97,6 @@ async def track(event: WebEvent, request: Request):
     event.ip = real_ip if real_ip else request.client.host
     event.timestamp = datetime.now()
     event.user_agent = request.headers.get("User-Agent")
-    event.referrer = request.headers.get("Referer")
     event.language = request.headers.get("Accept-Language")
     event.country = request.headers.get("CF-IPCountry")
 
