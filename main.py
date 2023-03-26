@@ -105,18 +105,18 @@ async def track(event: WebEvent, request: Request):
 
 
 @app.get("/admin/api/sessions_per_day")
-async def get_sessions_per_day_req(days=7):
+async def get_sessions_per_day_req(days: int = 7):
     result = await get_sessions_per_day(days)
     return result
 
 
 @app.get("/admin/api/hits_per_page")
-async def get_hits_per_page_req(days=7):
+async def get_hits_per_page_req(days: int = 7):
     result = await get_hits_per_page(days)
     return result
 
 
 @app.get("/admin/api/unique_sessions_per_page")
-async def get_unique_sessions_per_page_req(days=7):
+async def get_unique_sessions_per_page_req(days: int = 7):
     result = await get_unique_sessions_per_page(days)
     return result
