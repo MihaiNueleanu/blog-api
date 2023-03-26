@@ -14,7 +14,7 @@ from models.event import WebEvent
 from services.clap import count_claps, give_clap
 from services.discussion import find_comment_by_path, post_comment
 from services.email import send_email
-from services.event import create_event, get_sessions_per_day
+from services.event import create_event, get_hits_per_page, get_sessions_per_day, get_unique_sessions_per_page
 from services.medium import sync_blog_to_medium
 from settings import settings
 
@@ -105,6 +105,18 @@ async def track(event: WebEvent, request: Request):
 
 
 @app.get("/admin/api/sessions_per_day")
-async def get_sessions_per_day_req():
-    result = await get_sessions_per_day(7)
+async def get_sessions_per_day_req(days=7):
+    result = await get_sessions_per_day(days)
+    return result
+
+
+@app.get("/admin/api/hits_per_page")
+async def get_hits_per_page_req(days=7):
+    result = await get_hits_per_page(days)
+    return result
+
+
+@app.get("/admin/api/unique_sessions_per_page")
+async def get_unique_sessions_per_page_req(days=7):
+    result = await get_unique_sessions_per_page(days)
     return result
