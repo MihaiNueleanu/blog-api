@@ -14,7 +14,7 @@ from models.event import WebEvent
 from services.clap import count_claps, give_clap
 from services.discussion import find_comment_by_path, post_comment
 from services.email import send_email
-from services.event import create_event
+from services.event import create_event, get_sessions_per_day
 from services.medium import sync_blog_to_medium
 from settings import settings
 
@@ -102,3 +102,9 @@ async def track(event: WebEvent, request: Request):
 
     await create_event(event)
     return {"message": "Success"}
+
+
+@app.get("/api/sessions_per_day")
+async def get_sessions_per_day_req():
+    result = await get_sessions_per_day(7)
+    return result
