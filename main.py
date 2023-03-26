@@ -104,7 +104,7 @@ async def track(event: WebEvent, request: Request):
     return {"message": "Success"}
 
 
-@app.get("/api/sessions_per_day")
+@app.get("/admin/api/sessions_per_day")
 async def get_sessions_per_day_req():
     result = await get_sessions_per_day(7)
     return result
