@@ -102,11 +102,14 @@ async def get_unique_sessions_per_page(number_of_days=7):
 
 def enrich_event(event, request):
     real_ip = request.headers.get("X-Real-IP")
-    event.ip = real_ip if real_ip else request.client.host
     event.timestamp = datetime.now()
     event.user_agent = request.headers.get("User-Agent")
     event.language = request.headers.get("Accept-Language")
     event.country = request.headers.get("CF-IPCountry")
+
+    event.ip = real_ip if real_ip else request.client.host
+    if request.headers.get("cf-connecting-ip"):
+        event.ip = request.headers.get("cf-connecting-ip")
 
     if event.user_agent:
         user_agent = parse(event.user_agent)
