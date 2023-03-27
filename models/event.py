@@ -15,3 +15,4 @@ class WebEvent(BaseModel):
     browser: Optional[dict] = None
     os: Optional[dict] = None
     device: Optional[dict] = None
+    device_type: Optional[str] = None

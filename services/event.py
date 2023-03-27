@@ -133,7 +133,7 @@ async def get_top_referrers(number_of_days=7):
     return results
 
 
-def enrich_event(event, request):
+def enrich_event(event: WebEvent, request):
     real_ip = request.headers.get("X-Real-IP")
     event.timestamp = datetime.now()
     event.user_agent = request.headers.get("User-Agent")
@@ -149,3 +149,12 @@ def enrich_event(event, request):
         event.browser = user_agent.browser._asdict()
         event.os = user_agent.os._asdict()
         event.device = user_agent.device._asdict()
+
+        if user_agent.is_mobile:
+            event.device_type = "mobile"
+        elif user_agent.is_tablet:
+            event.device_type = "tablet"
+        elif user_agent.is_pc:
+            event.device_type = "pc"
+        elif user_agent.is_bot:
+            event.device_type = "bot"
