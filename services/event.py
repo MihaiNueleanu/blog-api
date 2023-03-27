@@ -2,6 +2,7 @@ from datetime import datetime, timedelta
 from typing import List
 from models.event import WebEvent
 from services.database import database
+from user_agents import parse
 
 collection = database.analytics
 
@@ -97,3 +98,18 @@ async def get_unique_sessions_per_page(number_of_days=7):
     results = await collection.aggregate(pipeline).to_list(None)
 
     return results
+
+
+def enrich_event(event, request):
+    real_ip = request.headers.get("X-Real-IP")
+    event.ip = real_ip if real_ip else request.client.host
+    event.timestamp = datetime.now()
+    event.user_agent = request.headers.get("User-Agent")
+    event.language = request.headers.get("Accept-Language")
+    event.country = request.headers.get("CF-IPCountry")
+
+    if event.user_agent:
+        user_agent = parse(event.user_agent)
+        event.browser = user_agent.browser._asdict()
+        event.os = user_agent.os._asdict()
+        event.device = user_agent.device._asdict()

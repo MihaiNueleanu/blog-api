@@ -12,3 +12,6 @@ class WebEvent(BaseModel):
     referrer: Optional[str] = None
     language: Optional[str] = None
     country: Optional[str] = None
+    browser: Optional[dict] = None
+    os: Optional[dict] = None
+    device: Optional[dict] = None

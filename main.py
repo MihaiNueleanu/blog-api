@@ -6,6 +6,7 @@ from typing import Optional
 from fastapi import FastAPI, Header, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from starlette.requests import Request
+from user_agents import parse
 
 from models.clap import Clap
 from models.comment import Comment
@@ -14,7 +15,8 @@ from models.event import WebEvent
 from services.clap import count_claps, give_clap
 from services.discussion import find_comment_by_path, post_comment
 from services.email import send_email
-from services.event import create_event, get_hits_per_page, get_sessions_per_day, get_unique_sessions_per_page
+from services.event import (create_event, enrich_event, get_hits_per_page,
+                            get_sessions_per_day, get_unique_sessions_per_page)
 from services.medium import sync_blog_to_medium
 from settings import settings
 
@@ -93,15 +95,16 @@ async def send_message(message: EmailMessage, request: Request):
 
 @app.post("/api/event")
 async def track(event: WebEvent, request: Request):
-    real_ip = request.headers.get("X-Real-IP")
-    event.ip = real_ip if real_ip else request.client.host
-    event.timestamp = datetime.now()
-    event.user_agent = request.headers.get("User-Agent")
-    event.language = request.headers.get("Accept-Language")
-    event.country = request.headers.get("CF-IPCountry")
-
+    enrich_event(event, request)
     await create_event(event)
     return {"message": "Success"}
+
+
+@app.get("/api/event")
+async def track(request: Request):
+    event = WebEvent(session_id="test", path="/test")
+    enrich_event(event, request)
+    return event
 
 
 @app.get("/admin/api/sessions_per_day")
