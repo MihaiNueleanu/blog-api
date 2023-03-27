@@ -100,6 +100,39 @@ async def get_unique_sessions_per_page(number_of_days=7):
     return results
 
 
+async def get_top_referrers(number_of_days=7):
+    start_date = datetime.now() - timedelta(days=number_of_days)
+    end_date = datetime.now()
+    pipeline = [
+        {
+            "$match": {
+                "timestamp": {"$gte": start_date, "$lt": end_date}
+            }
+        },
+        {
+            "$group": {
+                "_id": {"referrer": "$referrer"},
+                "count": {"$sum": 1}
+            }
+        },
+        {
+            "$sort": {
+                "count": -1
+            }
+        },
+        {
+            "$project": {
+                "_id": 0,
+                "referrer": "$_id.referrer",
+                "count": 1
+            }
+        }
+    ]
+    results = await collection.aggregate(pipeline).to_list(None)
+
+    return results
+
+
 def enrich_event(event, request):
     real_ip = request.headers.get("X-Real-IP")
     event.timestamp = datetime.now()

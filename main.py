@@ -16,7 +16,8 @@ from services.clap import count_claps, give_clap
 from services.discussion import find_comment_by_path, post_comment
 from services.email import send_email
 from services.event import (create_event, enrich_event, get_hits_per_page,
-                            get_sessions_per_day, get_unique_sessions_per_page)
+                            get_sessions_per_day, get_top_referrers,
+                            get_unique_sessions_per_page)
 from services.medium import sync_blog_to_medium
 from settings import settings
 
@@ -122,6 +123,12 @@ async def get_hits_per_page_req(days: int = 7):
 @app.get("/admin/api/unique_sessions_per_page")
 async def get_unique_sessions_per_page_req(days: int = 7):
     result = await get_unique_sessions_per_page(days)
+    return result
+
+
+@app.get("/admin/api/top_referrers")
+async def get_top_referrers_req(days: int = 7):
+    result = await get_top_referrers(days)
     return result
 
 
