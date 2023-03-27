@@ -120,3 +120,9 @@ async def get_hits_per_page_req(days: int = 7):
 async def get_unique_sessions_per_page_req(days: int = 7):
     result = await get_unique_sessions_per_page(days)
     return result
+
+
+@app.get('/api/headers')
+async def get_headers(request: Request):
+    print(request.headers)
+    return request.headers
