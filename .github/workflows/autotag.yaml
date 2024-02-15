@@ -74,7 +74,7 @@ jobs:
           cd kubernetes
 
           # CHANGES
-          sed -i "s/release-.*$/release-$TAG/" ./blog-discussion/deployment.yaml
+          sed -i "s/blog-api:.*$/blog-api:$TAG/" ./blog-api/deployment.yaml
 
           # PUSH
           git remote set-url origin $URL
