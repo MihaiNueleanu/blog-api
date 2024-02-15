@@ -11,7 +11,7 @@ jobs:
     steps:
       - name: Checkout Git repo
         uses: actions/checkout@master
-      
+
       # Version bump
       - name: Automated Version Bump
         id: versionBump
@@ -34,32 +34,25 @@ jobs:
           body: ${{ steps.versionBump.outputs.clean_changelog }}
 
       # Docker build
-      - name: Set up Docker Buildx
-        id: buildx
-        uses: docker/setup-buildx-action@master
-      - name: Cache Docker layers
-        uses: actions/cache@v2
-        with:
-          path: /tmp/.buildx-cache
-          key: ${{ runner.os }}-buildx-${{ github.sha }}
-          restore-keys: |
-            ${{ runner.os }}-buildx-
       - name: Login to Docker Hub
-        uses: docker/login-action@v1
+        uses: docker/login-action@v2
         with:
-          username: mihainueleanu
-          password: ${{ secrets.DOCKER_HUB_PASSWORD }}
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
       - name: Build and push
-        id: docker_build
-        uses: docker/build-push-action@v2
+        uses: docker/build-push-action@v4
         with:
-          context: ./
+          context: .
           file: ./Dockerfile
-          builder: ${{ steps.buildx.outputs.name }}
           push: true
-          tags: mihainueleanu/blog-discussion:release-${{ steps.versionBump.outputs.tag }}
-          cache-from: type=local,src=/tmp/.buildx-cache
-          cache-to: type=local,dest=/tmp/.buildx-cache
+          tags: ghcr.io/mihainueleanu/blog-api:latest,ghcr.io/mihainueleanu/blog-api:${{ steps.versionBump.outputs.tag }}
+          cache-from: type=registry,ref=ghcr.io/mihainueleanu/blog-api:latest
+          cache-to: type=inline
 
       # Deploy to kubernetes repo
       - name: Install SSH Key
